@@ -47,7 +47,12 @@ const Waitress = class {
 
             setTimeout(
                 () => {
-                    resolve('beer')
+                    try {
+                        const beer = this.storage.grabBeer()
+                        resolve(beer)
+                    } catch (error) {
+                        reject(error)
+                    }
                 },
                 timeOfFetch * 1000
             )
@@ -57,8 +62,24 @@ const Waitress = class {
 
 const waitress1 = new Waitress(storage1)
 
-const fetchBeerPromise = waitress1.fetchBeer()
+// me ordering beer
+const fetchBeer1Promise = waitress1.fetchBeer()
+// my first colleague ordering beer
+const fetchBeer2Promise = waitress1.fetchBeer()
+// my second colleague ordering beer
+const fetchBeer3Promise = waitress1.fetchBeer()
 
-fetchBeerPromise.then(console.log)
+const drinkCallback = (colleague) => (beer) => {
+    console.log(`${colleague} got my beer`, beer)
+    beer.drinkWhole()
+}
+const noBeerCallback = (error) => console.log('Cry!', error.message)
 
-console.log(fetchBeerPromise)
+fetchBeer1Promise.then(drinkCallback('I'))
+fetchBeer1Promise.catch(noBeerCallback)
+
+fetchBeer2Promise.then(drinkCallback('My first colleague'))
+fetchBeer2Promise.catch(noBeerCallback)
+
+fetchBeer3Promise.then(drinkCallback('My second colleague'))
+fetchBeer3Promise.catch(noBeerCallback)
