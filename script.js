@@ -21,11 +21,16 @@ const Beer = class {
 
 const BeerStorage = class {
     
-    constructor(startQuantity){
-        this.quantity = startQuantity
+    constructor(startQuantity = 2){
+        this.beers = (new Array(startQuantity)).fill(1).map(() => new Beer())
     }
 
     grabBeer(){
-        this.quantity = this.quantity - 1
+        if(this.beers.length === 0){
+            throw new Error('No beers in storage')
+        }
+        return this.beers.pop()
     }
 }
+
+const storage1 = new BeerStorage() 
